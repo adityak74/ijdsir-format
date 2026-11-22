@@ -1,8 +1,8 @@
 // IJDSIR — International Journal of Dental Science and Innovative Research
-// Typst template for the two fill-in documents in this folder:
-//   #show: manuscript.with(...)   — ijdsir-manuscript-template (doc/pdf)
-//   #covering-letter(...)          — covering-letter.pdf (+ Annexure-I reviewers)
-// Geometry is measured from ijdsir-manuscript-template-pdf-format.pdf (all values in pt):
+// Unofficial template reproducing the journal's two fill-in documents:
+//   #show: manuscript.with(...)   — manuscript template
+//   #covering-letter(...)          — covering letter (+ Annexure-I reviewers)
+// Geometry is measured from the journal's manuscript template PDF (all values in pt):
 // US Letter, 0.5" margins left/right, columns 259.2 wide / 21.6 gap, Times New Roman 11 pt,
 // Word "1.5 lines" spacing = 18.96 pt baseline pitch.
 
@@ -12,7 +12,6 @@
 #let blue = rgb("#0070c0")
 #let purple = rgb("#7030a0")
 #let link-blue = rgb("#3333cc")
-#let logo-path = "../logo.png" // pass logo: none to drop it
 
 #let pitch = 18.975pt                // baseline-to-baseline
 #let gap = pitch - 1.107 * 11pt      // leading for 11 pt lines (TNR ascender+descender = 1.107em)
@@ -37,7 +36,7 @@
   volume: "1", issue: "1", period: "January – February - 2018",
   pages: "01 -03", year: "2017",
   paper: "us-letter",   // the journal's PDF is Letter; "a4" also works
-  logo: logo-path,
+  logo: none,           // journal logo as content, e.g. image("logo.png")
   body,
 ) = {
   let first = if running-author == auto { authors.at(0, default: (name: "Author")).name } else { running-author }
@@ -62,7 +61,7 @@
             fill: rgb(75, 172, 198), stroke: 0.75pt + rgb(79, 129, 189)))
         }
         place(top + left, dx: 0pt, dy: 97pt, line(length: 607.1pt, stroke: 0.75pt + rgb(49, 132, 155)))
-        if logo != none { place(top + left, dx: 36.2pt, dy: 7.2pt, image(logo, width: 49.2pt)) }
+        if logo != none { place(top + left, dx: 36.2pt, dy: 7.2pt, { set image(width: 49.2pt); logo }) }
         at(137.4pt, 56.3pt, text(font: tnr, 12pt, weight: "bold", fill: red)[_International Journal of Dental Science and Innovative Research_ (_IJDSIR_)])
         at(36pt, 68.2pt, bi(10pt, green)[IJDSIR : Dental Publication Hub])
         at(36pt, 81.4pt, bi(10pt, blue)[Available Online at: www.ijdsir.com])
@@ -78,7 +77,7 @@
         dots(8pt, 583.2pt, 734.5pt)
         at(36pt, 749.8pt, text(font: tnr, 9pt, style: "italic", fill: purple)[© *#year IJDSIR, All Rights Reserved*])
         at(597.4pt, 752.4pt, rotate(-90deg, origin: top + left,
-          text(font: ("Cambria",) + tnr, 11pt, weight: "bold")[Page#text(22pt, str(n))]))
+          text(font: tnr, 11pt, weight: "bold")[Page#text(22pt, str(n))]))
       }
     },
   )
@@ -140,8 +139,9 @@
 }
 
 // ---------------------------------------------------------------- Covering letter
-// Measured from covering-letter.pdf (US Letter). Its embedded decorative fonts and images were
-// extracted to ../assets — compile with: typst compile --root .. --font-path ../assets covering-letter.typ
+// Measured from covering-letter.pdf (US Letter). The journal's header uses the AR JULIAN and
+// Lucida Calligraphy fonts plus two images; pass them via title-font / contact-font / logo / banner
+// (see typst/covering-letter.typ). Without them the header falls back to Times New Roman.
 #let navy = rgb("#002060")
 
 // Next line's baseline sits `dy` below the previous line's baseline.
@@ -161,6 +161,10 @@
   author: (name: none, institution: none, country: none, contact: none, mobile: none, email: none),
   place: none, date: none,
   reviewers: (),        // up to 3: ((name:, designation:, institution:, area:, contact:, email:), ...)
+  logo: none,           // header logo as content, e.g. image("logo.png")
+  banner: none,         // "An International Journal House" image under the logo
+  title-font: none,     // journal-name font in the header, e.g. "AR JULIAN"
+  contact-font: none,   // font of the word "Contact", e.g. "Lucida Calligraphy"
 ) = {
   let a = (name: none, institution: none, country: none, contact: none, mobile: none, email: none) + author
   set document(title: "Covering Letter")
@@ -177,15 +181,15 @@
       // Word "thick-thin" page border: 3pt black, 0.7pt white gap, 0.7pt black
       std.place(top + left, dx: 25.5pt, dy: 25.5pt, rect(width: 561pt, height: 741pt, stroke: 3pt))
       std.place(top + left, dx: 28.05pt, dy: 28.05pt, rect(width: 555.9pt, height: 735.9pt, stroke: 0.7pt))
-      std.place(top + left, dx: 30.5pt, dy: 28.7pt, image("../assets/cl-logo.png", width: 66.1pt))
-      std.place(top + left, dx: 26.1pt, dy: 94.9pt, image("../assets/cl-banner.png", width: 143.3pt, height: 12.8pt))
-      at(64.2pt, 119.88pt, text(font: "CIJFNU+ARJULIAN", size: 14pt, fill: red)[International Journal of Dental Science and Innovative Research (IJDSIR)])
+      if logo != none { std.place(top + left, dx: 30.5pt, dy: 28.7pt, { set image(width: 66.1pt); logo }) }
+      if banner != none { std.place(top + left, dx: 26.1pt, dy: 94.9pt, { set image(width: 143.3pt, height: 12.8pt, fit: "stretch"); banner }) }
+      at(64.2pt, 119.88pt, text(font: if title-font == none { tnr } else { title-font },
+        weight: if title-font == none { "bold" } else { "regular" }, size: 14pt, fill: red)[International Journal of Dental Science and Innovative Research (IJDSIR)])
       let web(x, body) = at(x, 132.54pt, text(font: tnr, size: 10.02pt, weight: "bold", style: "italic", fill: navy, body))
       web(176.46pt + 12 * 2.505pt)[Website: www.ijdsir.com,]
-      at(312.9pt, 132.54pt, text(font: "CIJFNU+LucidaCalligraphy", size: 7.98pt, style: "italic", fill: navy)[Contact])
+      at(312.9pt, 132.54pt, text(font: if contact-font == none { tnr } else { contact-font }, size: if contact-font == none { 10.02pt } else { 7.98pt }, weight: if contact-font == none { "bold" } else { "regular" }, style: "italic", fill: navy)[Contact])
       web(345.72pt + 2.505pt)[us: editor\@ijdsir.com]
-      std.place(top + left, dx: 47.3pt, dy: if n == 1 { 139.6pt } else { 149.8pt },
-        image("../assets/cl-rule.png", width: 518.9pt, height: 3.9pt))
+      fill-rect(47.8pt, if n == 1 { 140.1pt } else { 150.3pt }, 518.4pt, 2.9pt, rgb(75, 172, 198))
       // footer: 3pt + 0.7pt rules in rgb(98,36,35), then the reserved line and page number
       let maroon = rgb(98, 36, 35)
       fill-rect(45.5pt, 735.2pt, 522pt, 3pt, maroon)

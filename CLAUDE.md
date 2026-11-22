@@ -38,7 +38,7 @@ Never edit the files in `typst/` or the journal originals in the repo root. Copy
    email, corresponding author (name, address, phone, email), conflicts of interest, abstract,
    keywords, the body sections/subsections, tables, figures with captions, and references.
 2. **PDF (Typst).** Copy `typst/manuscript.typ` to `papers/<name>/paper.typ`. Change the import to
-   `#import "../../typst/ijdsir.typ": manuscript`. Replace every field and all sample body text with
+   `#import "../../typst/ijdsir.typ": manuscript` and the logo to `image("../../logo.png")`. Replace every field and all sample body text with
    the paper's content:
    - Level-1 headings: `= Heading` (auto-numbered "1.", "2." …). Subsections: `== Heading`.
      If the paper numbers its headings itself, use `#heading(numbering: none)[…]` with its own
@@ -68,7 +68,7 @@ Never edit the files in `typst/` or the journal originals in the repo root. Copy
 
 ## Covering letter
 
-`typst/covering-letter.typ` shows the fields. Copy it to `papers/<name>/` and fill only with details
+`typst/covering-letter.typ` shows the fields. Copy it to `papers/<name>/`, fix its `../assets/` image paths to `../../assets/`, and fill only with details
 from the paper or from the user. Fields left out print the journal's dotted blanks. Compile with
 `typst compile --root ../.. --font-path ../../assets covering-letter.typ` (the font path is required for the header fonts).
 

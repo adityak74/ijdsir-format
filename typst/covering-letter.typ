@@ -8,4 +8,10 @@
 //   place: "Pune", date: "21 November 2026",
 //   reviewers: ((name: "...", designation: "Professor", institution: "...", area: "Endodontics",
 //                contact: "...", email: "..."),),
-#covering-letter()
+#covering-letter(
+  // journal header artwork (extracted from the journal's PDF into ../assets; needs --font-path ../assets)
+  logo: image("../assets/cl-logo.png"),
+  banner: image("../assets/cl-banner.png"),
+  title-font: "CIJFNU+ARJULIAN",
+  contact-font: "CIJFNU+LucidaCalligraphy",
+)

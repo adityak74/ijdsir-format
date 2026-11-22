@@ -99,6 +99,7 @@ Body text…
 │   ├── ijdsir.typ                # Templates: manuscript(), covering-letter()
 │   ├── manuscript.typ            # Sample manuscript (journal's sample text)
 │   └── covering-letter.typ       # Sample covering letter (blank form)
+├── package/                      # Typst Universe package (molar-ijdsir)
 ├── assets/                       # Covering-letter header fonts and images
 ├── docs/                         # README preview images
 └── *.pdf, *.doc, *.docx          # Original journal templates and author instructions
@@ -110,6 +111,22 @@ Body text…
   bottom margin from later pages, so it uses the later pages' margin.
 - **The page number on pages 2 onward uses Times New Roman.** The journal uses Cambria; it is used
   automatically if installed.
+
+## Typst Universe package
+
+`package/` is the same template packaged as
+[`molar-ijdsir`](https://typst.app/universe/package/molar-ijdsir) for Typst Universe, without the
+journal's logo, fonts or files:
+
+```sh
+typst init @preview/molar-ijdsir:0.1.0
+```
+
+## License
+
+The template code (`typst/`, `package/`, `CLAUDE.md`, `docs/`) is released under the [MIT License](LICENSE).
+The journal's files in the repository root and the fonts and images in `assets/` are **not**
+covered by it. They belong to their respective owners.
 
 ## Disclaimer
 
