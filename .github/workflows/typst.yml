@@ -1,0 +1,39 @@
+name: Typst
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Typst 0.14.2
+        run: |
+          curl -sSL https://github.com/typst/typst/releases/download/v0.14.2/typst-x86_64-unknown-linux-musl.tar.xz \
+            | tar -xJ --strip-components=1 -C /usr/local/bin typst-x86_64-unknown-linux-musl/typst
+          typst --version
+
+      - name: Manuscript sample
+        working-directory: typst
+        run: typst compile --root .. manuscript.typ
+
+      - name: Covering letter sample
+        working-directory: typst
+        run: typst compile --root .. --font-path ../assets covering-letter.typ
+
+      - name: Universe package template
+        run: |
+          dir="$RUNNER_TEMP/pkgs/preview/molar-ijdsir/$(grep -m1 '^version' package/typst.toml | cut -d'"' -f2)"
+          mkdir -p "$dir" && cp -RL package/. "$dir"
+          typst compile --package-path "$RUNNER_TEMP/pkgs" "$dir/template/main.typ" "$RUNNER_TEMP/template.pdf"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pdfs
+          path: |
+            typst/*.pdf
+            ${{ runner.temp }}/template.pdf
